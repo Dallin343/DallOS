@@ -1,0 +1,19 @@
+make boot
+make[1]: Entering directory '/home/dallin/DallOS'
+i686-elf-as boot.s -o boot.o
+make[1]: Leaving directory '/home/dallin/DallOS'
+make kernel
+make[1]: Entering directory '/home/dallin/DallOS'
+i686-elf-gcc -c kernel.c -o kernel.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+i686-elf-gcc -c gdt.c -o gdt.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+make[1]: Leaving directory '/home/dallin/DallOS'
+i686-elf-gcc -T linker.ld -o DallOS.bin -ffreestanding -O2 -nostdlib kernel.o boot.o gdt.o sys.h -lgcc;
+mkdir -p isodir/boot/grub;
+cp DallOS.bin isodir/boot/DallOS.bin;
+cp grub.cfg isodir/boot/grub/grub.cfg;
+grub-mkrescue /usr/lib/grub/i386-pc -o DallOS.iso isodir;
+make finish
+make[1]: Entering directory '/home/dallin/DallOS'
+rm *.o *.bin
+rm -R isodir
+make[1]: Leaving directory '/home/dallin/DallOS'
