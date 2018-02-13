@@ -33,16 +33,15 @@ _start:
 .global gdt_p
 gdt_flush:
 	lgdt gdt_p
-	mov 0x10, %ax
+	mov $0x10, %ax
 	mov %ax, %ds
+	mov %ax, %ss
 	mov %ax, %es
 	mov %ax, %fs
 	mov %ax, %gs
-	mov %ax, %ss
 	ljmp $0x08, $flush
 
 flush:
 	ret
-
 
 .size _start, . - _start

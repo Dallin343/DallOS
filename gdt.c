@@ -19,7 +19,7 @@ struct gdt_pointer
 	uint32_t base;
 }__attribute__((packed));
 
-struct gdt_entry gdt[4];
+struct gdt_entry gdt[3];
 struct gdt_pointer gdt_p;
 
 extern void gdt_flush();
@@ -43,8 +43,8 @@ void gdt_set_entry(size_t num, uint32_t limit, uint32_t base, uint8_t access, ui
 void gdt_install()
 {
 	terminal_writestring("Here\n");
-	gdt_p.limit = (sizeof(struct gdt_entry) * 4) - 1;
-	gdt_p.base = &gdt;
+	gdt_p.limit = (sizeof(struct gdt_entry) * 3) - 1;
+	gdt_p.base = (uint32_t)&gdt;
 
 	//Sets NULL descriptor
 	gdt_set_entry(0,0,0,0,0);

@@ -172,10 +172,9 @@ void terminal_writestring(const char* data)
 void kernel_main(void)
 {
 	terminal_initialize();
-	terminal_writestring("This is a test of the Keyboard:\n");
 
+	terminal_writestring("This is a test of the Keyboard:\n");
 	gdt_install();
-	while(1) {	}
 	terminal_writestring("This is a test of the Keyboard:\n");
 	while(1){
 		//terminal_putchar(getScancode());
