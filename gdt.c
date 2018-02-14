@@ -5,12 +5,12 @@
 
 struct gdt_entry
 {
+	uint16_t limit_low;
 	uint16_t base_low;
 	uint8_t base_mid;
-	uint8_t base_hi;
-	uint16_t limit_low;
 	uint8_t access;
 	uint8_t granularity;
+	uint8_t base_hi;
 }__attribute__((packed));
 
 struct gdt_pointer
@@ -29,7 +29,7 @@ void gdt_set_entry(size_t num, uint32_t limit, uint32_t base, uint8_t access, ui
 	//sets the base for the GDT entry based on masking the base parameter
 	gdt[num].base_low = (base & 0xFFFF);
 	gdt[num].base_mid = ((base >> 16) & 0xFF);
-	gdt[num].base_mid = ((base >> 24) & 0xFF);
+	gdt[num].base_hi = ((base >> 24) & 0xFF);
 
 	//Sets the limit.
 	gdt[num].limit_low = (limit & 0xFFFF);
