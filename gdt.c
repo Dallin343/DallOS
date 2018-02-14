@@ -55,7 +55,6 @@ void gdt_install()
 	//Sets Data Segment Descriptor.  Exact same as above but its a Data Segment.
 	gdt_set_entry(2, 0xFFFFFFFF, 0, 0x92, 0xCF);
 
-	gdt_flush(); 
-	while(1){} 
+	gdt_flush();
 }
 
