@@ -3,8 +3,27 @@
 #include <stddef.h>
 #include <stdint.h>
 
-void terminal_putchar(char c);
-void terminal_writestring(const char* data);
+uint8_t *memcpy(uint8_t *dest,  const uint8_t *src, int count)
+{
+	for (int i = 0; i < count; i++) {
+		dest[i] = src[i];
+	}
+	return dest;
+}
+
+uint8_t *memset(uint8_t *dest, uint8_t val, int count)
+{
+	while (count--)
+		dest[count] = val;
+	return dest;
+}
+
+uint16_t *memsetw(uint16_t *dest, uint16_t val, int count)
+{
+	while(count--)
+		dest[count] = val;
+	return dest;
+}
 
 void outb(uint16_t port, uint8_t val)
 {
@@ -175,6 +194,7 @@ void kernel_main(void)
 
 	terminal_writestring("This is a test of the Keyboard:\n");
 	gdt_install();
+	idt_install();
 	terminal_writestring("This is a test of the Keyboard:\n");
 	while(1){
 		//terminal_putchar(getScancode());

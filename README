@@ -1,0 +1,4 @@
+run make to compile the entire kernel.
+run make debug to compile with debug flags, and all intermediaries left. then starts qemu
+run make run to compile fully and start qemu.
+make clean cleans.

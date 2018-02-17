@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-/* MAIN.C */
+/* kernel.C */
 extern uint8_t *memcpy(uint8_t *dest, const uint8_t *src, int count);
 extern uint8_t *memset(uint8_t *dest, uint8_t val, int count);
 extern uint16_t *memsetw(uint16_t *dest, uint16_t val, int count);
@@ -14,9 +14,16 @@ extern void outb (uint16_t port, uint8_t val);
 extern void terminal_putchar(char c);
 extern void terminal_writestring(const char* data);
 
-//GDT Functions
+//TABLE Functions
 extern void gdt_install();
-
-//IDT Functions
+extern void idt_install(void);
+extern void isr_install();
+//Register struct
+struct regs {
+	unsigned int gs, fs, es, ds;
+	unsigned int  edi, esi, ebp, esp, ebx, edx, ecx, eax;
+	unsigned int int_no, err;
+	unsigned int  eip, cs, eflags, useresp, ss;
+};
 
 #endif
