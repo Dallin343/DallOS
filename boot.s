@@ -48,7 +48,6 @@ flush:
 .global idt_p
 idt_flush:
 	lidt idt_p
-	int $5
 	ret
 
 .global fault_handler

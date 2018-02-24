@@ -1,4 +1,5 @@
 #include "sys.h"
+#include "scancode.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -45,7 +46,8 @@ uint8_t inb(uint16_t port)
 
 char getScancode()
 {
-    while (!(inb(0x64) & 1));
+    uint8_t in;
+    do {in = inb(0x64);}while (!(in & 1) && !(in & 0x10));
     return inb(0x60);
 }
 
@@ -55,7 +57,7 @@ unsigned char scancode[128] =
 
 
 char getChar() {
-    return getScancode();//scancode[getScancode()];
+    return map[getScancode()];//scancode[getScancode()];
 }
 
 
@@ -197,6 +199,6 @@ void kernel_main(void)
 	idt_install();
 	terminal_writestring("This is a test of the Keyboard:\n");
 	while(1){
-		//terminal_putchar(getScancode());
+		terminal_putchar(getChar());
 	}
 }
