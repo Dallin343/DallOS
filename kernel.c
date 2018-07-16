@@ -183,7 +183,7 @@ void terminal_write (const char* data, size_t size)
 	}
 }
 
-void terminal_writestring(const char* data) 
+void terminal_writestring(const char* data)
 {
 	terminal_write(data, strlen(data));
 }
@@ -193,8 +193,11 @@ void kernel_main(void)
 	terminal_initialize();
 
 	terminal_writestring("This is a test of the Keyboard:\n");
+	asm volatile("cli");
 	gdt_install();
 	idt_install();
+	PIC_remap(0x20,0x28);
+	//asm volatile("int $5");
 	terminal_writestring("This is a test of the Keyboard:\n");
 	while(1){
 		//terminal_putchar(getScancode());

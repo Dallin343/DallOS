@@ -18,6 +18,8 @@ extern void terminal_writestring(const char* data);
 extern void gdt_install();
 extern void idt_install(void);
 extern void isr_install();
+
+extern void PIC_remap(int offset1, int offset2);
 //Register struct
 struct regs {
 	unsigned int gs, fs, es, ds;

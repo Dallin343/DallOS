@@ -24,8 +24,6 @@ _start:
 	mov $stack_top, %esp
 	call kernel_main
 
-	cli
-
 1:	hlt
 	jmp 1b
 
@@ -48,7 +46,7 @@ flush:
 .global idt_p
 idt_flush:
 	lidt idt_p
-	int $5
+	sti
 	ret
 
 .global fault_handler
@@ -108,192 +106,213 @@ isr_common:
 .global isr29
 .global isr30
 .global isr31
+.global isr32
+.global isr33
+.global isr34
 
 isr0:
 	cli
 	push $0x00
 	push $0x00
-	jmp isr_common 
+	jmp isr_common
 
 isr1:
 	cli
 	push $0x00
 	push $0x01
-	jmp isr_common 
+	jmp isr_common
 
 isr2:
 	cli
 	push $0x00
 	push $0x02
-	jmp isr_common 
+	jmp isr_common
 
 isr3:
 	cli
 	push $0x00
 	push $0x03
-	jmp isr_common 
+	jmp isr_common
 
 isr4:
 	cli
 	push $0x00
 	push $0x04
-	jmp isr_common 
+	jmp isr_common
 
 isr5:
 	cli
 	push $0x00
 	push $0x05
-	jmp isr_common 
+	jmp isr_common
 
 isr6:
 	cli
 	push $0x00
 	push $0x06
-	jmp isr_common 
+	jmp isr_common
 
 isr7:
 	cli
 	push $0x00
 	push $0x07
-	jmp isr_common 
+	jmp isr_common
 
 isr8:
 	cli
 	push $0x08
-	jmp isr_common 
+	jmp isr_common
 
 isr9:
 	cli
 	push $0x00
 	push $0x09
-	jmp isr_common 
+	jmp isr_common
 
 isr10:
 	cli
 	push $0x0A
-	jmp isr_common 
+	jmp isr_common
 
 isr11:
 	cli
 	push $0x0B
-	jmp isr_common 
+	jmp isr_common
 
 isr12:
 	cli
 	push $0x0C
-	jmp isr_common 
+	jmp isr_common
 
 isr13:
 	cli
 	push $0x0D
-	jmp isr_common 
+	jmp isr_common
 
 isr14:
 	cli
 	push $0x0E
-	jmp isr_common 
+	jmp isr_common
 
 isr15:
 	cli
 	push $0x00
 	push $0x0F
-	jmp isr_common 
+	jmp isr_common
 
 isr16:
 	cli
 	push $0x00
 	push $0x10
-	jmp isr_common 
+	jmp isr_common
 
 isr17:
 	cli
 	push $0x00
 	push $0x11
-	jmp isr_common 
+	jmp isr_common
 
 isr18:
 	cli
 	push $0x00
 	push $0x12
-	jmp isr_common 
+	jmp isr_common
 
 isr19:
 	cli
 	push $0x00
 	push $0x13
-	jmp isr_common 
+	jmp isr_common
 
 isr20:
 	cli
 	push $0x00
 	push $0x14
-	jmp isr_common 
+	jmp isr_common
 
 isr21:
 	cli
 	push $0x00
 	push $0x15
-	jmp isr_common 
+	jmp isr_common
 
 isr22:
 	cli
 	push $0x00
 	push $0x16
-	jmp isr_common 
+	jmp isr_common
 
 isr23:
 	cli
 	push $0x00
 	push $0x17
-	jmp isr_common 
+	jmp isr_common
 
 isr24:
 	cli
 	push $0x00
 	push $0x18
-	jmp isr_common 
+	jmp isr_common
 
 isr25:
 	cli
 	push $0x00
 	push $0x19
-	jmp isr_common 
+	jmp isr_common
 
 isr26:
 	cli
 	push $0x00
 	push $0x1A
-	jmp isr_common 
+	jmp isr_common
 
 isr27:
 	cli
 	push $0x00
 	push $0x1B
-	jmp isr_common 
+	jmp isr_common
 
 isr28:
 	cli
 	push $0x00
 	push $0x1C
-	jmp isr_common 
+	jmp isr_common
 
 isr29:
 	cli
 	push $0x00
 	push $0x1D
-	jmp isr_common 
+	jmp isr_common
 
 isr30:
 	cli
 	push $0x00
 	push $0x1E
-	jmp isr_common 
+	jmp isr_common
 
 isr31:
 	cli
 	push $0x00
 	push $0x1F
-	jmp isr_common 
+	jmp isr_common
+
+isr32:
+	cli
+	push $0x00
+	push $0x20
+	jmp isr_common
+
+isr33:
+	cli
+	push $0x00
+	push $0x21
+	jmp isr_common
+
+isr34:
+	cli
+	push $0x00
+	push $0x22
+	jmp isr_common
 
 
 .size _start, . - _start

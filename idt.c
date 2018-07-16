@@ -51,6 +51,9 @@ extern void isr28();
 extern void isr29();
 extern void isr30();
 extern void isr31();
+extern void isr32();
+extern void isr33();
+extern void isr34();
 
 void isr_install()
 {
@@ -86,13 +89,25 @@ void isr_install()
 	idt_set_entry(29, (unsigned)isr29, 0x08, 0x8E);
 	idt_set_entry(30, (unsigned)isr30, 0x08, 0x8E);
 	idt_set_entry(31, (unsigned)isr31, 0x08, 0x8E);
+	idt_set_entry(32, (unsigned)isr32, 0x08, 0x8E);
+	idt_set_entry(33, (unsigned)isr33, 0x08, 0x8E);
+	idt_set_entry(34, (unsigned)isr34, 0x08, 0x8E);
 }
 
 void fault_handler(struct regs *r)
 {
 	if (r->int_no < 32) {
-		terminal_writestring("Caught Interrupt\nHalting...");
+		terminal_writestring("Caught Exception\nHalting...\n");
 		for (;;);
+	}
+	else if (r->int_no >= 32) {
+		if (r->int_no == 33) {
+			//Keyboard
+			outb(0x20, 0x20);
+		}
+		else {
+			outb(0x20, 0x20);
+		}
 	}
 }
 
