@@ -1,4 +1,5 @@
 #include "sys.h"
+#include "tty.h"
 
 struct idt_entry {
 	uint16_t base_lo;
@@ -54,6 +55,48 @@ extern void isr31();
 extern void isr32();
 extern void isr33();
 extern void isr34();
+void getcharacter();
+
+unsigned char keycode[128] =
+{
+	0, 27, '1', '2', '3', '4', '5', '6', '7', '8',
+	'9', '0', '-', '=', '\b',
+	'\t',
+	'q', 'w', 'e', 'r',
+	't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n',
+	0,
+	'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';',
+	'\'', '`', 0,
+	'\\', 'z', 'x', 'c', 'v', 'b', 'n',
+	'm', ',', '.', '/', 0,
+	'*',
+	0,
+	' ',
+	0,
+	0,
+	0, 0, 0, 0, 0, 0, 0, 0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	'-',
+	0,
+	0,
+	0,
+	'+',
+	0,
+	0,
+	0,
+	0,
+	0,
+	0, 0, 0,
+	0,
+	0,
+	0,
+};
+
 
 void isr_install()
 {
@@ -103,12 +146,24 @@ void fault_handler(struct regs *r)
 	else if (r->int_no >= 32) {
 		if (r->int_no == 33) {
 			//Keyboard
+			getcharacter();
 			outb(0x20, 0x20);
 		}
 		else {
 			outb(0x20, 0x20);
 		}
 	}
+}
+
+void getcharacter() {
+	//char c = 0;
+  //do {
+  	unsigned char scancode = inb(0x60);
+		if (!(scancode & 0x80)) {
+			terminal_putchar(keycode[scancode]);
+			return;
+		}
+//  } while(1);
 }
 
 void idt_set_entry(uint8_t num, uint32_t base, uint16_t selector, uint8_t flags)
