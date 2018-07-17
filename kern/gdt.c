@@ -1,5 +1,5 @@
-#include "sys.h"
-#include "tty.h"
+#include "../includes/sys.h"
+#include "../includes/tty.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>

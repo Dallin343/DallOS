@@ -1,5 +1,5 @@
-#include "sys.h"
-#include "tty.h"
+#include "../includes/sys.h"
+#include "../includes/tty.h"
 
 struct idt_entry {
 	uint16_t base_lo;
