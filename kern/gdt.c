@@ -1,4 +1,5 @@
-#include "sys.h"
+#include "../includes/sys.h"
+#include "../includes/tty.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -57,4 +58,3 @@ void gdt_install()
 
 	gdt_flush();
 }
-

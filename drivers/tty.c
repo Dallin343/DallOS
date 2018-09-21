@@ -1,63 +1,4 @@
-#include "sys.h"
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-
-uint8_t *memcpy(uint8_t *dest,  const uint8_t *src, int count)
-{
-	for (int i = 0; i < count; i++) {
-		dest[i] = src[i];
-	}
-	return dest;
-}
-
-uint8_t *memset(uint8_t *dest, uint8_t val, int count)
-{
-	while (count--)
-		dest[count] = val;
-	return dest;
-}
-
-uint16_t *memsetw(uint16_t *dest, uint16_t val, int count)
-{
-	while(count--)
-		dest[count] = val;
-	return dest;
-}
-
-void outb(uint16_t port, uint8_t val)
-{
-    asm volatile ( "outb %0, %1" : : "a"(val), "Nd"(port) );
-    /* There's an outb %al, $imm8  encoding, for compile-time constant port numbers that fit in 8b.  (N constraint).
-     * Wider immediate constants would be truncated at assemble-time (e.g. "i" constraint).
-     * The  outb  %al, %dx  encoding is the only option for all other cases.
-     * %1 expands to %dx because  port  is a uint16_t.  %w1 could be used if we had the port number a wider C type */
-}
-
-uint8_t inb(uint16_t port)
-{
-    uint8_t ret;
-    asm volatile ( "inb %1, %0"
-                   : "=a"(ret)
-                   : "Nd"(port) );
-    return ret;
-}
-
-char getScancode()
-{
-    while (!(inb(0x64) & 1));
-    return inb(0x60);
-}
-
-unsigned char scancode[128] =
-{
-};
-
-
-char getChar() {
-    return getScancode();//scancode[getScancode()];
-}
-
+#include "../includes/tty.h"
 
 enum vga_color {
 	VGA_COLOR_BLACK = 0,
@@ -119,6 +60,15 @@ void terminal_initialize(void)
 	}
 }
 
+void update_cursor(int x, int y) {
+	uint16_t pos = y * VGA_WIDTH + x;
+
+	outb(0x3D4, 0x0F);
+	outb(0x3D5, (uint8_t) (pos & 0xFF));
+	outb(0x3D4, 0x0E);
+	outb(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
+}
+
 void terminal_setcolor(uint8_t color)
 {
 	terminal_color = color;
@@ -138,12 +88,14 @@ void terminal_delentryat(size_t x, size_t y)
 {
 	const size_t index = y * VGA_WIDTH + x;
 	terminal_buffer[index] = vga_entry(' ', terminal_color);
+	update_cursor(x,y);
 }
 
 void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
 {
 	const size_t index = y * VGA_WIDTH + x;
 	terminal_buffer[index] = vga_entry(c, color);
+	update_cursor(x + 1, y);
 }
 
 void terminal_putchar(char c)
@@ -153,14 +105,20 @@ void terminal_putchar(char c)
 		case 0xD:
 			terminal_row++;
 			terminal_column = 0;
+      update_cursor(terminal_column, terminal_row);
 			break;
 		case 0x8:
-			//terminal_writestring("\nIn the case\n");
-			terminal_delentryat(terminal_row, --terminal_column);
 			if (terminal_column == 0) {
 				terminal_column = VGA_WIDTH-1;
-				terminal_row--;
+				if (terminal_row != 0) {
+					terminal_row--;
+				} else {
+					terminal_column = 0;
+				}
+			} else {
+				terminal_column--;
 			}
+			terminal_delentryat(terminal_column, terminal_row);
 			break;
 		default:
 			terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
@@ -171,6 +129,7 @@ void terminal_putchar(char c)
 					terminal_row--;
 				}
 			}
+      update_cursor(terminal_column, terminal_row);
 			break;
 
 	}
@@ -186,20 +145,4 @@ void terminal_write (const char* data, size_t size)
 void terminal_writestring(const char* data)
 {
 	terminal_write(data, strlen(data));
-}
-
-void kernel_main(void)
-{
-	terminal_initialize();
-
-	terminal_writestring("This is a test of the Keyboard:\n");
-	asm volatile("cli");
-	gdt_install();
-	idt_install();
-	PIC_remap(0x20,0x28);
-	//asm volatile("int $5");
-	terminal_writestring("This is a test of the Keyboard:\n");
-	while(1){
-		//terminal_putchar(getScancode());
-	}
 }
