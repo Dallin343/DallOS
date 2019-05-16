@@ -3,8 +3,8 @@ AS=i686-elf-as
 CFLAGS= -std=gnu99 -ffreestanding -Wall -Wextra -ggdb
 LFLAGS= -ffreestanding -O2 -nostdlib
 OUTFLAG = | log.txt
-OBJS=kernel.o boot.o gdt.o idt.o pic.o tty.o
-HDRS=includes/sys.h includes/tty.h
+OBJS=kernel.o boot.o gdt.o idt.o pic.o tty.o stdio.o
+HDRS=includes/sys.h includes/tty.h lib/stdio.h
 K = kern/kernel.c
 B = kern/boot.s
 
@@ -25,6 +25,7 @@ kernel:
 	$(CC) -c kern/idt.c -o idt.o $(CFLAGS)
 	$(CC) -c drivers/pic.c -o pic.o $(CFLAGS)
 	$(CC) -c drivers/tty.c -o tty.o $(CFLAGS)
+	$(CC) -c lib/stdio.c -o stdio.o $(CFLAGS)
 
 log:
 	$(AS) $(B) -o boot.o -g > log.txt
@@ -52,5 +53,5 @@ clean:
 	rm *.o *.bin *.iso
 	rm -R isodir
 finish:
-	rm *.o *.bin
+	rm *.o
 	rm -R isodir

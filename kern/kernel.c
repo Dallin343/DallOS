@@ -1,5 +1,6 @@
 #include "../includes/sys.h"
 #include "../includes/tty.h"
+#include "../lib/stdio.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -49,13 +50,8 @@ char getScancode()
     return inb(0x60);
 }
 
-unsigned char scancode[128] =
-{
-};
-
-
 char getChar() {
-    return getScancode();//scancode[getScancode()];
+    return getScancode();
 }
 
 void kernel_main(void)
@@ -67,8 +63,12 @@ void kernel_main(void)
 	gdt_install();
 	idt_install();
 	PIC_remap(0x20,0x28);
-	terminal_writestring("This is a test of the Keyboard:\n");
+	terminal_writestring("This is a test of the printf function:\n");
+	int i = 100;
+	int x = 12345;
+	char *s = "Successfully printed a string!\n\n\n Three newlines!";
+	k_printf("Test of i: %i\nTest of x: %x\n Test of s: %s", i, x, s);
 	while(1){
-		//terminal_putchar(getScancode());
+		
 	}
 }
